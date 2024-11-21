@@ -1,0 +1,28 @@
+from ibm_watson import NaturalLanguageUnderstandingV1
+from ibm_watson.natural_language_understanding_v1 import Features, EmotionOptions
+from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
+
+def emotion_detector(text: str) -> dict:
+    """
+    Detect emotions in the given text using IBM Watson NLP.
+
+    :param text: Input text to analyze
+    :return: Dictionary with emotion analysis results
+    """
+    # Replace with your IBM Watson API credentials
+    api_key = "your_api_key_here"
+    service_url = "your_service_url_here"
+
+    # Authenticator setup
+    authenticator = IAMAuthenticator(api_key)
+    nlu = NaturalLanguageUnderstandingV1(version='2021-08-01', authenticator=authenticator)
+    nlu.set_service_url(service_url)
+
+    # Analyze text for emotions
+    response = nlu.analyze(
+        text=text,
+        features=Features(emotion=EmotionOptions())
+    ).get_result()
+
+    # Extract and return emotion scores
+    return response.get('emotion', {}).get('document', {}).get('emotion', {})
